@@ -17,9 +17,9 @@ Usage
     Use the .decide command followed by a question to request a "Yes" or "No" answer from the bot.
 
 Note: The bot logs all requests and responses to a file named log.txt, which can be accessed by visiting the Flask server running on localhost:5000.
+      You don't need flask to be up for this to work, I am adding it for log keeping. Who requests the bot and passes it to a webui.
+
 
 License
 
 This script is licensed under the GNU General Public License v3.0 License. See the LICENSE file for more information.
-
-You don't need flask to be up for this to work, I am adding it for log keeping. Who requests the bot and passes it to a webui.
