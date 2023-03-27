@@ -12,7 +12,7 @@ Usage
 
     Install the discord and Flask libraries by running pip install discord flask in the command line.
     Replace the REPLACE WITH YOUR API placeholder in client.run() with your Discord bot API token.
-    Run the script using python discord_bot.py in the command line.
+    Run the script using python app.py in the command line.
     Invite the bot to your Discord server and grant it appropriate permissions.
     Use the .decide command followed by a question to request a "Yes" or "No" answer from the bot.
 
