@@ -18,8 +18,19 @@ async def on_ready():
 async def on_message(message):
     if message.author == client.user:
         return
-
-    if message.content.startswith('.decide'):
+    
+    if '.decide' in message.content:
+        with open('log.txt', 'a') as f:
+            f.write(f'{message.author.name} requested: {message.content}\n')
+        question = message.content.lower().replace('.decide', '').strip()
+        rand = random.random() # generate a random float between 0 and 1
+        if rand < 0.5:
+            response = 'No'
+        else:
+            response = 'Yes'
+        await message.channel.send(response)
+        
+    if message.content.startswith('.choice'):
         options = message.content.split(' ')[1:]
         decision = decide(options)
         await message.channel.send(decision)
