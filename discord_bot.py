@@ -34,23 +34,35 @@ async def on_message(message):
 
     elif message.content.startswith('.choice'):
         sentence = message.content.lower().replace('.choice', '').strip()
-        # Extract choices by removing "or" and splitting on ","
-        choices = sentence.replace(' or ', ',').split(',')
 
-        # Remove any leading/trailing whitespace from choices
-        choices = [choice.strip() for choice in choices]
+        # Strip "should I" from the sentence
+        sentence = sentence.replace("should i", "").strip()
 
-        # Detecting valid choice question
-        if len(choices) > 1:
-            decision = choice(choices)
+        # Splitting the sentence based on ' or '
+        parts = sentence.split(' or ')
+
+        # Extracting choices
+        choice1 = parts[0].strip() if len(parts) > 0 else None
+        choice2 = parts[1].strip() if len(parts) > 1 else None
+
+        if choice1 and choice2:
+            if "should I" in parts[0]:
+                choice1 = choice1.replace("should I", "").strip()
+            if "should I" in parts[1]:
+                choice2 = choice2.replace("should I", "").strip()
+
+            decision = choice([choice1, choice2])
+
+            # Strip question mark '?' from the decision
+            decision = decision.rstrip('?')
+
             with open('log.txt', 'a') as f:
                 f.write(f'{message.author.name} requested: {message.content}\n')
             await message.channel.send(decision)
         else:
             with open('log.txt', 'a') as f:
                 f.write(f'{message.author.name} requested an invalid choice: {message.content}\n')
-            await message.channel.send("Please provide multiple choices.")
-
+            await message.channel.send("Please provide at least two choices separated by 'or'.")
 
 
 if __name__ == "__main__":
