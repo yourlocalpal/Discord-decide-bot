@@ -35,26 +35,22 @@ async def on_message(message):
     elif message.content.startswith('.choice'):
         sentence = message.content.lower().replace('.choice', '').strip()
 
-        # Strip "should I" from the sentence
-        sentence = sentence.replace("should i", "").strip()
+        # Replace phrases like "should we", "could we", "could I" from the sentence
+        sentence = sentence.replace("should we", "").replace("could we", "").replace("could i", "").strip()
 
         # Splitting the sentence based on ' or '
         parts = sentence.split(' or ')
 
-        # Extracting choices
-        choice1 = parts[0].strip() if len(parts) > 0 else None
-        choice2 = parts[1].strip() if len(parts) > 1 else None
+        choice1 = parts[0].strip("should I").strip("should we").strip("could we").strip("could I").strip("?") if len(
+            parts) > 0 else None
+        choice2 = parts[1].strip("should I").strip("should we").strip("could we").strip("could I").strip("?") if len(
+            parts) > 1 else None
 
         if choice1 and choice2:
-            if "should I" in parts[0]:
-                choice1 = choice1.replace("should I", "").strip()
-            if "should I" in parts[1]:
-                choice2 = choice2.replace("should I", "").strip()
-
             decision = choice([choice1, choice2])
 
-            # Strip question mark '?' from the decision
-            decision = decision.rstrip('?')
+            # Strip characters from the decision based on the sentence
+            decision = decision.strip("?").strip()
 
             with open('log.txt', 'a') as f:
                 f.write(f'{message.author.name} requested: {message.content}\n')
@@ -66,4 +62,4 @@ async def on_message(message):
 
 
 if __name__ == "__main__":
-    client.run('DISCORD API')
+    client.run('DISCORD API') 
