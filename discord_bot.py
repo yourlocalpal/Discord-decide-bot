@@ -34,32 +34,28 @@ async def on_message(message):
 
     elif message.content.startswith('.choice'):
         sentence = message.content.lower().replace('.choice', '').strip()
-
-        # Replace phrases like "should we", "could we", "could I" from the sentence
-        sentence = sentence.replace("should we", "").replace("could we", "").replace("could i", "").strip()
-
-        # Splitting the sentence based on ' or '
         parts = sentence.split(' or ')
 
-        choice1 = parts[0].strip("should I").strip("should we").strip("could we").strip("could I").strip("?") if len(
-            parts) > 0 else None
-        choice2 = parts[1].strip("should I").strip("should we").strip("could we").strip("could I").strip("?") if len(
-            parts) > 1 else None
+        if len(parts) >= 2:
+            choices = []
 
-        if choice1 and choice2:
-            decision = choice([choice1, choice2])
+            for part in parts:
+                # Remove phrases like "should I," "should we," "could we," "could I"
+                part = part.replace("should we", "").replace("should i", "").replace("could i", "").replace("should they", "").replace("should she", "").strip()
+                choices.append(part.rstrip('?'))
 
-            # Strip characters from the decision based on the sentence
-            decision = decision.strip("?").strip()
+            if all(choices):
+                decision = choice(choices)
 
-            with open('log.txt', 'a') as f:
-                f.write(f'{message.author.name} requested: {message.content}\n')
-            await message.channel.send(decision)
+                with open('log.txt', 'a') as f:
+                    f.write(f'{message.author.name} requested: {message.content}\n')
+
+                await message.channel.send(decision)
+            else:
+                await message.channel.send(f"{message.author.name} use choices separated by 'or'")
         else:
-            with open('log.txt', 'a') as f:
-                f.write(f'{message.author.name} requested an invalid choice: {message.content}\n')
-            await message.channel.send("Please provide at least two choices separated by 'or'.")
-
+            await message.channel.send(f"{message.author.name} use choices separated by 'or'")
 
 if __name__ == "__main__":
-    client.run('DISCORD API') 
+    client.run('DISCORD API')
+
